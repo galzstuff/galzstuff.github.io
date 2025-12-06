@@ -13,13 +13,15 @@
     }
   
     :root {
-      --bg: #2b211a;
-      --card-bg: #4b3728;
+      --bg: #1a1410;
+      --bg-secondary: #2b211a;
+      --card-bg: linear-gradient(135deg, #4b3728 0%, #3d2e20 100%);
       --primary: #c69c6d;
       --accent: #8c6a4f;
       --text: #f5e8d3;
-      --radius: 16px;
-      --shadow: 0 12px 24px rgba(0, 0, 0, 0.4);
+      --glow: rgba(198, 156, 109, 0.3);
+      --radius: 20px;
+      --shadow: 0 20px 60px rgba(0, 0, 0, 0.6);
     }
   
     * {
@@ -33,295 +35,760 @@
       background: var(--bg);
       color: var(--text);
       min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      padding: 2rem;
       overflow-x: hidden;
+      position: relative;
+    }
+
+    body::before {
+      content: '';
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: 
+        radial-gradient(circle at 20% 50%, rgba(198, 156, 109, 0.1) 0%, transparent 50%),
+        radial-gradient(circle at 80% 80%, rgba(140, 106, 79, 0.1) 0%, transparent 50%);
+      pointer-events: none;
+      animation: bgShift 15s ease-in-out infinite;
+      z-index: 0;
+    }
+
+    @keyframes bgShift {
+      0%, 100% { opacity: 0.3; }
+      50% { opacity: 0.6; }
+    }
+
+    .container {
+      position: relative;
+      z-index: 1;
+      padding: 2rem;
+      max-width: 1600px;
+      margin: 0 auto;
     }
   
     .header {
       text-align: center;
       margin-bottom: 3rem;
-      animation: fadeIn 1s ease forwards;
-      opacity: 0;
+      animation: fadeInDown 1s ease forwards;
+      position: relative;
+    }
+
+    .header::after {
+      content: '';
+      position: absolute;
+      bottom: -20px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 100px;
+      height: 3px;
+      background: linear-gradient(90deg, transparent, var(--primary), transparent);
+      animation: glowPulse 2s ease-in-out infinite;
+    }
+
+    @keyframes glowPulse {
+      0%, 100% { box-shadow: 0 0 10px var(--glow); }
+      50% { box-shadow: 0 0 25px var(--glow); }
     }
   
+    .header-img-wrapper {
+      position: relative;
+      display: inline-block;
+      margin-bottom: 1.5rem;
+    }
+
+    .header-img-wrapper::before {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 220px;
+      height: 220px;
+      border-radius: 50%;
+      background: linear-gradient(45deg, var(--primary), var(--accent));
+      opacity: 0.3;
+      filter: blur(20px);
+      animation: rotate 10s linear infinite;
+    }
+
+    @keyframes rotate {
+      from { transform: translate(-50%, -50%) rotate(0deg); }
+      to { transform: translate(-50%, -50%) rotate(360deg); }
+    }
+
     .header img {
+      position: relative;
       width: 200px;
       height: 200px;
       border-radius: 50%;
-      margin-bottom: 1rem;
-      box-shadow: 0 0 10px rgba(0,0,0,0.6);
+      border: 3px solid var(--primary);
+      box-shadow: 0 0 30px var(--glow);
+      transition: transform 0.3s ease;
+    }
+
+    .header img:hover {
+      transform: scale(1.05);
     }
   
     .header h1 {
-      font-size: 2.5rem;
-      color: var(--primary);
+      font-size: 3rem;
+      background: linear-gradient(135deg, var(--primary) 0%, #e3b97f 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 0.5rem;
+      text-shadow: 0 0 30px var(--glow);
     }
   
     .lang-toggle {
-      margin-top: 1rem;
-      padding: 0.4rem 0.8rem;
-      border: none;
-      background: var(--accent);
-      color: var(--text);
-      border-radius: var(--radius);
+      margin-top: 1.5rem;
+      padding: 0.8rem 1.8rem;
+      border: 2px solid var(--primary);
+      background: transparent;
+      color: var(--primary);
+      border-radius: 50px;
       font-family: 'M8X11', sans-serif;
       cursor: pointer;
+      transition: all 0.3s ease;
+      font-size: 1rem;
+      position: relative;
+      overflow: hidden;
+      min-height: 44px;
+      touch-action: manipulation;
+    }
+
+    .lang-toggle::before {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 0;
+      height: 0;
+      border-radius: 50%;
+      background: var(--primary);
+      transition: width 0.4s ease, height 0.4s ease;
+      transform: translate(-50%, -50%);
+      z-index: -1;
+    }
+
+    .lang-toggle:hover::before {
+      width: 300px;
+      height: 300px;
+    }
+
+    .lang-toggle:hover {
+      color: var(--bg);
+      border-color: var(--primary);
+      transform: translateY(-2px);
+      box-shadow: 0 5px 20px var(--glow);
     }
   
     .window-grid {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      gap: 2rem;
-      max-width: 2400px;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(min(450px, 100%), 1fr));
+      gap: 1.5rem;
+      margin-bottom: 2rem;
     }
-  
+
     .window {
       background: var(--card-bg);
       border-radius: var(--radius);
       box-shadow: var(--shadow);
       padding: 1.5rem;
-      width: 460px;
-      min-height: 280px;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-evenly;
+      border: 1px solid rgba(198, 156, 109, 0.2);
+      position: relative;
+      overflow: visible;
       animation: fadeInUp 0.7s ease forwards;
       opacity: 0;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      min-height: 200px;
     }
-  
-    .window button {
-      margin-top: 1rem;
-      padding: 0.5rem 1rem;
-      background: var(--primary);
-      color: #2b211a;
-      border: none;
-      border-radius: var(--radius);
-      cursor: pointer;
-      font-size: 1rem;
-      width: fit-content;
-      align-self: flex-end;
-      font-weight: bold;
+
+    .window::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: radial-gradient(circle, rgba(198, 156, 109, 0.1) 0%, transparent 70%);
+      opacity: 0;
+      transition: opacity 0.3s ease;
+      pointer-events: none;
     }
-  
-    .window button:hover {
-      background: #a87d50;
+
+    .window:hover::before {
+      opacity: 1;
     }
-  
-    .window:nth-child(1) { animation-delay: 0.2s; }
-    .window:nth-child(2) { animation-delay: 0.4s; }
-    .window:nth-child(3) { animation-delay: 0.6s; }
-    .window:nth-child(4) { animation-delay: 0.8s; }
-  
+
+    .window:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 25px 70px rgba(0, 0, 0, 0.7), 0 0 30px var(--glow);
+    }
+
+    .window:nth-child(1) { animation-delay: 0.1s; }
+    .window:nth-child(2) { animation-delay: 0.2s; }
+    .window:nth-child(3) { animation-delay: 0.3s; }
+    .window:nth-child(4) { animation-delay: 0.4s; }
+    .window:nth-child(5) { animation-delay: 0.5s; }
+    .window:nth-child(6) { animation-delay: 0.6s; }
+    .window:nth-child(7) { animation-delay: 0.7s; }
+    .window:nth-child(8) { animation-delay: 0.8s; }
+    .window:nth-child(9) { animation-delay: 0.9s; }
+    .window:nth-child(10) { animation-delay: 1s; }
+
     @keyframes fadeInUp {
-      from { opacity: 0; transform: translateY(20px); }
+      from { opacity: 0; transform: translateY(30px); }
       to { opacity: 1; transform: translateY(0); }
     }
-  
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(-10px); }
+
+    @keyframes fadeInDown {
+      from { opacity: 0; transform: translateY(-20px); }
       to { opacity: 1; transform: translateY(0); }
     }
   
     .window h2 {
-      font-size: 1.5rem;
-      margin-bottom: 1rem;
+      font-size: 1.8rem;
+      margin-bottom: 1.2rem;
       color: var(--primary);
+      position: relative;
+      display: inline-block;
+      padding-bottom: 0.5rem;
+    }
+
+    .window h2::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 60%;
+      height: 2px;
+      background: linear-gradient(90deg, var(--primary), transparent);
     }
   
-    .window p {
-      flex-grow: 1;
+    .window p, .window li {
       font-size: 1rem;
+      line-height: 1.7;
+      margin-bottom: 0.8rem;
     }
-  
+
+    .window ul {
+      list-style: none;
+      padding: 0;
+    }
+
     .window li {
-      margin-left: 1rem;
-      margin-bottom: 0.4rem;
+      margin-left: 1.5rem;
+      position: relative;
     }
-  
-    .window a {
-      margin-top: 1rem;
-      text-decoration: none;
+
+    .window li::before {
+      content: '▹';
+      position: absolute;
+      left: -1.2rem;
       color: var(--primary);
-      font-weight: 600;
-      cursor: pointer;
     }
-  
-    .window a:hover {
-      color: #e3b97f;
+
+    .window img {
+      width: 100%;
+      border-radius: 12px;
     }
-  
-    .social-menu {
-      display: none;
-      flex-direction: column;
-      gap: 0.5rem;
+
+    .btn {
       margin-top: 1rem;
-      animation: slideDown 0.3s ease forwards;
+      padding: 0.9rem 1.8rem;
+      background: var(--primary);
+      color: var(--bg);
+      border: none;
+      border-radius: 50px;
+      cursor: pointer;
+      font-size: 1.05rem;
+      font-weight: bold;
+      font-family: 'M8X11', sans-serif;
+      transition: all 0.3s ease;
+      display: inline-block;
+      position: relative;
+      overflow: hidden;
+      min-height: 44px;
+      touch-action: manipulation;
     }
-  
-    @keyframes slideDown {
-      from { opacity: 0; transform: translateY(-10px); }
-      to { opacity: 1; transform: translateY(0); }
+
+    .btn::before {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 0;
+      height: 0;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.2);
+      transition: width 0.4s ease, height 0.4s ease;
+      transform: translate(-50%, -50%);
+    }
+
+    .btn:hover::before {
+      width: 300px;
+      height: 300px;
+    }
+
+    .btn:hover {
+      background: #a87d50;
+      transform: translateY(-2px);
+      box-shadow: 0 10px 25px rgba(198, 156, 109, 0.4);
     }
   
     .social-link {
       display: flex;
       align-items: center;
-      gap: 0.5rem;
+      gap: 0.8rem;
       text-decoration: none;
       color: var(--text);
-      transition: color 0.3s ease;
+      padding: 0.8rem;
+      border-radius: 10px;
+      transition: all 0.3s ease;
+      margin-bottom: 0.5rem;
+      position: relative;
+      overflow: hidden;
+      min-height: 44px;
+      font-size: 0.95rem;
     }
-  
+
+    .social-link::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 0;
+      height: 100%;
+      width: 3px;
+      background: var(--primary);
+      transform: scaleY(0);
+      transition: transform 0.3s ease;
+    }
+
+    .social-link:hover::before {
+      transform: scaleY(1);
+    }
+
     .social-link:hover {
+      background: rgba(198, 156, 109, 0.1);
+      padding-left: 1rem;
       color: var(--primary);
     }
-  
-    @media (max-width: 768px) {
-      .window {
-        width: 90%;
-      }
+
+    .social-link i {
+      font-size: 1.2rem;
+    }
+
     audio {
       width: 100%;
       outline: none;
       border-radius: 12px;
-      background-color: var(--card-bg);
-      box-shadow: var(--shadow);
       margin-top: 1rem;
-      accent-color: var(--primary);
+      filter: drop-shadow(0 5px 15px rgba(0, 0, 0, 0.3));
     }
-    
-    audio::-webkit-media-controls-panel {
-      background-color: var(--card-bg);
+
+    .music-controls {
+      display: flex;
+      gap: 1rem;
+      justify-content: center;
+      margin-top: 1rem;
+    }
+
+    .music-controls button {
+      padding: 0.8rem 1.5rem;
+      background: rgba(198, 156, 109, 0.2);
+      border: 1px solid var(--primary);
+      color: var(--primary);
+      border-radius: 50px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      font-size: 1.2rem;
+      font-family: 'M8X11', sans-serif;
+      min-width: 50px;
+      min-height: 44px;
+    }
+
+    .music-controls button:hover {
+      background: var(--primary);
+      color: var(--bg);
+      transform: scale(1.1);
+    }
+
+    input[type="text"], textarea {
+      width: 100%;
+      padding: 1rem;
       border-radius: 12px;
-    }
-    
-    audio::-webkit-media-controls-play-button,
-    audio::-webkit-media-controls-pause-button {
-      background-color: var(--primary);
-      border-radius: 50%;
-    }
-    
-    audio::-webkit-media-controls-current-time-display,
-    audio::-webkit-media-controls-time-remaining-display {
+      border: 2px solid rgba(198, 156, 109, 0.3);
+      background: rgba(43, 33, 26, 0.5);
       color: var(--text);
+      font-family: 'M8X11', sans-serif;
+      margin-top: 0.8rem;
+      transition: all 0.3s ease;
+      font-size: 1rem;
+      min-height: 44px;
     }
+
+    input[type="text"]:focus, textarea:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 15px var(--glow);
+    }
+
+    .messages-container {
+      max-height: 300px;
+      overflow-y: auto;
+      padding: 1rem;
+      border: 2px solid rgba(198, 156, 109, 0.3);
+      border-radius: 12px;
+      background: rgba(43, 33, 26, 0.3);
+      margin-top: 1rem;
+    }
+
+    .messages-container::-webkit-scrollbar {
+      width: 8px;
+    }
+
+    .messages-container::-webkit-scrollbar-track {
+      background: rgba(43, 33, 26, 0.5);
+      border-radius: 10px;
+    }
+
+    .messages-container::-webkit-scrollbar-thumb {
+      background: var(--primary);
+      border-radius: 10px;
+    }
+
+    .message-item {
+      padding: 0.8rem;
+      background: rgba(255, 255, 255, 0.05);
+      border-left: 3px solid var(--primary);
+      border-radius: 8px;
+      margin-bottom: 0.8rem;
+      transition: all 0.3s ease;
+    }
+
+    .message-item:hover {
+      background: rgba(255, 255, 255, 0.1);
+      transform: translateX(5px);
+    }
+
+    .blog-container {
+      max-height: 300px;
+      overflow-y: auto;
+    }
+
+    .blog-container::-webkit-scrollbar {
+      width: 8px;
+    }
+
+    .blog-container::-webkit-scrollbar-track {
+      background: rgba(43, 33, 26, 0.5);
+      border-radius: 10px;
+    }
+
+    .blog-container::-webkit-scrollbar-thumb {
+      background: var(--primary);
+      border-radius: 10px;
+    }
+
+    .blog-entry {
+      padding: 1rem;
+      border-left: 3px solid var(--primary);
+      margin-bottom: 1.5rem;
+      background: rgba(255, 255, 255, 0.03);
+      border-radius: 8px;
+      transition: all 0.3s ease;
+    }
+
+    .blog-entry:hover {
+      background: rgba(255, 255, 255, 0.07);
+      transform: translateX(5px);
+    }
+
+    .blog-entry strong {
+      color: var(--primary);
+      font-size: 1.1rem;
+    }
+
+    .blog-entry small {
+      opacity: 0.7;
+    }
+
+    #discordStatus {
+      width: 100%;
+      border-radius: 12px;
+      transition: transform 0.3s ease;
+    }
+
+    #discordStatus:hover {
+      transform: scale(1.02);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    }
+
+    .toggle-btn {
+      width: 100%;
+      padding: 0.8rem;
+      background: rgba(198, 156, 109, 0.2);
+      border: 2px solid var(--primary);
+      color: var(--primary);
+      border-radius: 12px;
+      cursor: pointer;
+      font-family: 'M8X11', sans-serif;
+      font-size: 1.3rem;
+      transition: all 0.3s ease;
+      margin-top: 0.8rem;
+      min-height: 44px;
+      touch-action: manipulation;
+    }
+
+    .toggle-btn:hover {
+      background: var(--primary);
+      color: var(--bg);
+    }
+
+    @media (max-width: 768px) {
+      .container {
+        padding: 1rem;
+      }
+
+      .window-grid {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+      }
+
+      .window {
+        padding: 1.5rem;
+      }
+
+      .header h1 {
+        font-size: 2rem;
+      }
+
+      .header img {
+        width: 150px;
+        height: 150px;
+      }
+
+      .header-img-wrapper::before {
+        width: 170px;
+        height: 170px;
+      }
+
+      .social-link {
+        font-size: 1rem;
+        padding: 1rem;
+      }
+
+      .music-controls {
+        gap: 0.8rem;
+      }
+
+      .music-controls button {
+        padding: 1rem;
+        font-size: 1.1rem;
+      }
+
+      #nowPlaying {
+        font-size: 0.9rem;
+        word-break: break-word;
+      }
+
+      .window h2 {
+        font-size: 1.5rem;
+      }
+
+      .messages-container {
+        font-size: 0.95rem;
+      }
+
+      .blog-entry {
+        font-size: 0.95rem;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .header h1 {
+        font-size: 1.7rem;
+      }
+
+      .window {
+        padding: 1.2rem;
+      }
+
+      .social-link span {
+        font-size: 0.9rem;
+      }
+
+      .window h2 {
+        font-size: 1.3rem;
+      }
+    }
+
+    @media (hover: none) {
+      .window:hover {
+        transform: none;
+      }
+
+      .social-link:active {
+        background: rgba(198, 156, 109, 0.2);
+      }
+
+      .btn:active {
+        transform: scale(0.98);
+      }
+    }
+
+    .window img {
+      width: 100%;
+      height: auto;
+      border-radius: 12px;
+      display: block;
+    }
+
+    .social-link i {
+      flex-shrink: 0;
+    }
+
+    audio {
+      width: 100%;
+      max-width: 100%;
+    }
+
+    * {
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    button, a, input, textarea {
+      -webkit-user-select: none;
+      user-select: none;
+    }
+
+    input, textarea {
+      -webkit-user-select: text;
+      user-select: text;
     }
   </style>
 </head>
 <body>
-  <div class="header">
-    <img src="https://files.catbox.moe/j5h37j.png" alt="pfp :p">
-    <h1>gal's stuff</h1>
-    <button class="lang-toggle" onclick="toggleLang()">Cambiar a Español</button>
+  <div class="container">
+    <div class="header">
+      <div class="header-img-wrapper">
+        <img src="https://files.catbox.moe/j5h37j.png" alt="pfp :p">
+      </div>
+      <h1>gal's stuff</h1>
+      <button class="lang-toggle" onclick="toggleLang()">Cambiar a Español</button>
+    </div>
+
+    <div class="window-grid">
+      <div class="window">
+        <h2 id="aboutTitle">about me</h2>
+        <p id="aboutText">hi, I'm Gal. I'm a content creator and coder that (mostly) does private projects that I later share with friends for fun. I'm from Spain and I'm a minor. note exclusively for the english language: English is NOT my first language. I might do typos and other things like that while writing, talking, etc. I apologise.</p>
+      </div>
+
+      <div class="window">
+        <h2 id="commsTitle">commission info</h2>
+        <img src="Gal's Web Commissions! - Brown.png">
+      </div>
+
+      <div class="window">
+        <h2 id="socialTitle">socials/projects</h2>
+        <p id="socialText">check my socials/projects below!!</p>
+        <div style="margin-top: 1rem;">
+          <a class="social-link" href="https://discord.gg/kSWDC5whwD" target="_blank"><i class="fab fa-discord"></i> <span>discord</span></a>
+          <a class="social-link" href="https://tiktok.com/@galzstuff" target="_blank"><i class="fab fa-tiktok"></i> <span>tiktok</span></a>
+          <a id="ttalt" class="social-link" href="https://tiktok.com/@gals.rhythia.acc" target="_blank" style="padding-left: 2rem;"><span>╰-tiktok (alt/backup account)</span></a>
+          <a class="social-link" href="https://x.com/galzstuff" target="_blank"><i class="fab fa-twitter"></i> <span>twitter/X</span></a>
+          <a class="social-link" href="https://www.instagram.com/galzstuffz/" target="_blank"><i class="fab fa-instagram"></i> <span>instagram</span></a>
+          <a class="social-link" href="https://youtube.com/@galzstuff" target="_blank"><i class="fab fa-youtube"></i> <span>youtube</span></a>
+          <a class="social-link" href="https://roblox.com/users/1879315878/profile" target="_blank"><i class="fas fa-cube"></i> <span>roblox</span></a>
+          <a id="Clothes" class="social-link" href="https://www.roblox.com/catalog?Category=1&CreatorName=DConectortab&CreatorType=User&salesTypeFilter=1" target="_blank" style="padding-left: 2rem;"><span>╰-selling clothes on roblox</span></a>
+          <a class="social-link" href="https://steamcommunity.com/id/galzstuff" target="_blank"><i class="fab fa-steam"></i> <span>steam</span></a>
+          <a id="bot1" class="social-link" href="https://discord.com/oauth2/authorize?client_id=1366506603297112155" target="_blank"><i class="fab fa-discord"></i> <span>add reminders to your Discord server/account</span></a>
+          <a id="bot2" class="social-link" href="https://discord.com/oauth2/authorize?client_id=1368161510114983987" target="_blank"><i class="fab fa-discord"></i> <span>add customizable temporal moderation actions to your Discord server</span></a>
+          <a id="bot3" class="social-link" href="https://discord.com/oauth2/authorize?client_id=1426889042435379240" target="_blank"><i class="fab fa-discord"></i> <span>add a Google Gemini-powered AI bot to your Discord server</span></a>
+          <a id="ybmp" class="social-link" href="https://galzstuff.github.io/ybmp" target="_blank"><i class="fas fa-music"></i> <span>start using a powerful music player right on your browser!</span></a>
+        </div>
+      </div>
+
+      <div class="window">
+        <h2 id="interestsTitle">interests</h2>
+        <ul>
+          <li>Counter-Strike</li>
+          <li>OneShot</li>
+          <li>Creatures of Sonaria</li>
+          <li>VOCALOID</li>
+          <li>Balatro</li>
+          <li>IMSCARED</li>
+          <li id="Shitpost">shitposting</li>
+          <li id="Code">coding</li>
+          <li id="Valve">Valve games</li>
+          <li id="More">...and more! DMs are open in all the platforms on where you can open them to everyone (check socials if you haven't done so yet, and/or press on the Discord Status image inside its window to go to my Discord profile), I won't mind you asking stuff like if I like certain stuff (and checking my socials should help!)</li>
+        </ul>
+      </div>
+
+      <div class="window">
+        <h2 id="DiscordTitle">discord status</h2>
+        <a href="https://discord.com/users/823875991729864725">
+          <img id="discordStatus"
+               src="https://lanyard.cnrad.dev/api/823875991729864725?idleMessage=Not%20doing%20anything%20at%20the%20moment.%2FNo%20estoy%20haciendo%20nada%20por%20ahora.&theme=dark&hideDecoration=true&animatedDecoration=false" />
+        </a>
+      </div>
+
+      <div class="window">
+        <h2 id="VisitsTitle">visits counter</h2>
+        <script type="text/javascript" src="https://www.free-counters.org/count/ipev"></script><br>
+        <a href='https://www.free-counters.org/' style="color: var(--primary);">free-counters.org</a> 
+        <script type='text/javascript' src='https://whomania.com/ctr?id=33a4acea4a4aa9cacd7597150a3d45c2f981862a'></script>
+      </div>
+
+      <div class="window">
+        <h2 id="NP">now playing</h2>
+        <div id="nowPlaying" style="color: var(--primary); margin-bottom: 1rem;">loading...</div>
+        <audio id="bgMusic" controls></audio>
+        <div class="music-controls">
+          <button onclick="prevTrack()">⏮️</button>
+          <button onclick="toggleMute()" id="muteBtn">🔊</button>
+          <button onclick="nextTrack()">⏭️</button>
+        </div>
+      </div>
+
+      <div class="window">
+        <h2>blog</h2>
+        <div id="blogEntries" class="blog-container">
+          <p>loading blog posts...</p>
+        </div>
+      </div>
+
+      <div class="window">
+        <h2 id="PM">messages</h2>
+        <div id="messagesContainer" class="messages-container" style="max-height: 5px;"></div>
+        <button id="toggleSizeBtn" onclick="toggleMessagesSize()" class="toggle-btn">➕</button>
+        <input type="text" id="messageUser" placeholder="Your name/Tu nombre" />
+        <textarea id="messageText" placeholder="Write a message.../Escribe un mensaje..." rows="3"></textarea>
+        <button class="btn" id="sendBtn" onclick="sendMessage()" style="width: 100%; margin-top: 0.8rem;">Send / Enviar</button>
+        <p id="msgError" style="display:none; color:#ff6b6b; margin-top:0.5rem;"></p>
+      </div>
+
+      <div class="window">
+        <h2 id="CoSTrades">creatures of sonaria ongoing trades and auctions</h2>
+        <p id="MainTextCoST">here you'll find any CoS trades and bids I'm interested on or doing. - to offer/trade DM me on Discord (click the Discord Status image on its respective window!) - every trade is NYP (Name Your Price) unless specified otherwise.</p>
+        <ul>
+          <li>Euvias B+W</li>
+          <li>Dioxikin B+W</li>
+        </ul>
+      </div>
+    </div>
   </div>
 
-  <div class="window-grid">
-    <div class="window">
-      <h2 id="aboutTitle">about me</h2>
-      <p id="aboutText">hi, I'm Gal. I'm a content creator and coder that (mostly) does private projects that I later share with friends for fun. I'm from Spain and I'm a minor. note exclusively for the english language: English is NOT my first language. I might do typos and other things like that while writing, talking, etc. I apologise.</p>
-    </div>
+  <script>
+    function updateDiscordStatus() {
+      const img = document.getElementById("discordStatus");
+      img.src = "https://lanyard.cnrad.dev/api/823875991729864725?idleMessage=Not%20doing%20anything%20at%20the%20moment.%2FNo%20estoy%20haciendo%20nada%20por%20ahora.&theme=dark&hideDecoration=true&animatedDecoration=false&" + Date.now();
+    }
+    updateDiscordStatus();
+    setInterval(updateDiscordStatus, 5000);
 
-    <div class="window">
-      <h2 id="commsTitle">commission info</h2>
-      <img src="Gal's Web Commissions! - Brown.png">
-    </div>
-
-    <div class="window">
-      <h2 id="socialTitle">socials/projects</h2>
-      <p id="socialText">check my socials/projects below!!</p>
-      <a onclick="toggleSocialMenu()" id="socialLink">check socialz/projectz →</a>
-      <div class="social-menu" id="socialMenu">
-        <a class="social-link" href="https://discord.gg/kSWDC5whwD" target="_blank"><i class="fab fa-discord"></i> discord</a>
-        <a class="social-link" href="https://tiktok.com/@galzstuff" target="_blank"><i class="fab fa-tiktok"></i> tiktok</a>
-        <a id="ttalt" class="social-link" href="https://tiktok.com/@gals.rhythia.acc" target="_blank"> ╰-tiktok (alt/backup account)</a>
-        <a class="social-link" href="https://x.com/galzstuff" target="_blank"><i class="fab fa-twitter"></i> twitter/X</a>
-        <a class="social-link" href="https://www.instagram.com/galzstuffz/" target="_blank"><i class="fab fa-instagram"></i> instagram</a>
-        <a class="social-link" href="https://youtube.com/@galzstuff" target="_blank"><i class="fab fa-youtube"></i> youtube</a>
-        <a class="social-link" href="https://roblox.com/users/1879315878/profile" target="_blank"><i class="fas fa-cube"></i> roblox</a>
-        <a id="Clothes" class="social-link" href="https://www.roblox.com/catalog?Category=1&CreatorName=DConectortab&CreatorType=User&salesTypeFilter=1" target="_blank">╰-selling clothes on roblox</a>
-        <a class="social-link" href="https://steamcommunity.com/id/galzstuff" target="_blank"><i class="fas fa-cube"></i> steam</a>
-        <a id="bot1" class="social-link" href="https://discord.com/oauth2/authorize?client_id=1366506603297112155" target="_blank"><i class="fab fa-discord"></i> add reminders to your Discord server/account</a>
-        <a id="bot2" class="social-link" href="https://discord.com/oauth2/authorize?client_id=1368161510114983987" target="_blank"><i class="fab fa-discord"></i> add customizable temporal moderation actions to your Discord server</a>
-        <a id="bot3" class="social-link" href="https://discord.com/oauth2/authorize?client_id=1426889042435379240" target="_blank"><i class="fab fa-discord"></i> add a Google Gemini-powered AI bot to your Discord server</a>
-        <a id="ybmp" class="social-link" href="https://galzstuff.github.io/ybmp" target="_blank"><i class="fas fa-cube"></i> start using a powerful music player right on your browser!</a>
-      </div>
-    </div>
-
-    <div class="window">
-      <h2 id="interestsTitle">interests</h2>
-        <li>Counter-Strike</li>
-        <li>OneShot</li>
-        <li>Creatures of Sonaria</li>
-        <li>VOCALOID</li>
-        <li>Balatro</li>
-        <li>IMSCARED</li>
-      	<li id="Shitpost">shitposting</li>
-        <li id="Code">coding</li>
-      	<li id="Valve">Valve games</li>
-        <li id="More">...and more! DMs are open in all the platforms on where you can open them to everyone (check socials if you haven't done so yet, and/or press on the Discord Status image inside its window to go to my Discord profile), I won't mind you asking stuff like if I like certain stuff (and checking my socials should help!)</li>
-    </div>
-
-    <div class="window">
-      <h2 id="DiscordTitle">discord status</h2>
-      <a href="https://discord.com/users/823875991729864725">
-        <img id="discordStatus"
-             src="https://lanyard.cnrad.dev/api/823875991729864725?idleMessage=Not%20doing%20anything%20at%20the%20moment.%2FNo%20estoy%20haciendo%20nada%20por%20ahora.&theme=dark&hideDecoration=true&animatedDecoration=false" />
-      </a>
-    </div>
-    
-    <script>
-      function updateDiscordStatus() {
-        const img = document.getElementById("discordStatus");
-        img.src = "https://lanyard.cnrad.dev/api/823875991729864725?idleMessage=Not%20doing%20anything%20at%20the%20moment.%2FNo%20estoy%20haciendo%20nada%20por%20ahora.&theme=dark&hideDecoration=true&animatedDecoration=false" + Date.now();
-      }
-    
-      updateDiscordStatus();
-    
-      setInterval(updateDiscordStatus, 5000);
-    </script>
-
-    <div class="window">
-      <h2 id="VisitsTitle">visits counter</h2>
-        <script type="text/javascript" src="https://www.free-counters.org/count/ipev"></script><br>
-        <a href='https://www.free-counters.org/'>free-counters.org</a> <script type='text/javascript' src='https://whomania.com/ctr?id=33a4acea4a4aa9cacd7597150a3d45c2f981862a'></script>
-    </div>
-
-    <div class="window">
-      <h2 id="NP">now playing</h2>
-      <div id="nowPlaying">loading...</div>
-      <audio id="bgMusic" controls style="width: 100%;"></audio>
-      <div style="margin-top: 10px;">
-        <button onclick="prevTrack()">⏮️</button>
-        <button onclick="toggleMute()" id="muteBtn">🔊</button>
-        <button onclick="nextTrack()">⏭️</button>
-      </div>
-    </div>
-
-
-
-
-    <div class="window" style="max-height: 300px; overflow-y: auto;">
-      <h2>blog</h2>
-      <div id="blogEntries">
-        <p>loading blog posts...</p>
-      </div>
-    </div>
-
-    <div class="window">
-      <h2 id="PM">messages</h2>
-      <div id="messagesContainer" style="max-height: 5px; overflow-y: auto; padding: 0.5rem; border: 1px solid var(--primary); border-radius: var(--radius); background: var(--accent);"></div>
-      <button id="toggleSizeBtn" onclick="toggleMessagesSize()" style="margin-top:0.5rem; width:100%;">➕</button>
-      <input type="text" id="messageUser" placeholder="Your name/Tu nombre" style="margin-top:0.5rem; width: 100%; padding:0.5rem; border-radius: var(--radius); border: 1px solid var(--primary);"/>
-      <textarea id="messageText" placeholder="Write a message.../Escribe un mensaje..." style="margin-top:0.5rem; width: 100%; padding:0.5rem; border-radius: var(--radius); border: 1px solid var(--primary);" rows="3"></textarea>
-      <button id="sendBtn" onclick="sendMessage()" style="margin-top:0.5rem;">Send / Enviar</button>
-      <p id="msgError" style="display:none; color:red; margin-top:0.5rem;"></p>
-    </div>
-    
-    <script>
     let expanded = false;
     function toggleMessagesSize() {
       const container = document.getElementById("messagesContainer");
@@ -368,12 +835,12 @@
         return;
       }
       $container.innerHTML = list.map(m => `
-        <div style="padding: .4rem .5rem; background: rgba(255,255,255,.6); border-radius: 10px; margin-bottom:.4rem;">
+        <div class="message-item">
           <div style="display:flex; justify-content:space-between; gap:.6rem; align-items:baseline;">
-            <strong style="color:var(--text);">${escapeHtml(m.user || "Anon")}</strong>
+            <strong style="color:var(--primary);">${escapeHtml(m.user || "Anon")}</strong>
             <small style="opacity:.65;">${humanTime(m.timestamp)}</small>
           </div>
-          <div style="margin-top:.15rem; white-space:pre-wrap;">${linkify(escapeHtml(m.message || ""))}</div>
+          <div style="margin-top:.4rem; white-space:pre-wrap;">${linkify(escapeHtml(m.message || ""))}</div>
         </div>
       `).join("");
       $container.scrollTop = $container.scrollHeight;
@@ -430,27 +897,6 @@
     
     fetchMessages();
     setInterval(fetchMessages, 10000);
-    </script>
-    
-    <div class="window">
-      <h2 id="CoSTrades">creatures of sonaria ongoing trades and auctions</h2>
-      <ul></ul><p id="MainTextCoST">here you'll find any CoS trades and bids I'm interested on or doing. - to offer/trade DM me on Discord (click the Discord Status image on its respective window!) - every trade is NYP (Name Your Price) unless specified otherwise.</p>
-        <li>Euvias B+W</li>
-        <li>Dioxikin B+W</li>
-      </ul>
-    </div>
-  </div>
-
-  <script>
-    function toggleSocialMenu() {
-      const menu = document.getElementById("socialMenu");
-      if (menu.style.display === "flex") {
-        menu.style.display = "none";
-      } else {
-        menu.style.display = "flex";
-        menu.style.animation = "slideDown 0.3s ease";
-      }
-    }
 
     let currentLang = 'en';
     function toggleLang() {
@@ -459,25 +905,24 @@
         document.getElementById("aboutText").textContent = "buenas, soy gal. soy un creador de contenido y programador de varios proyectos (mayormente) privados que comparto con mis amigos y hago por diversión. soy de España. (también cabría decir que soy menor de edad.)";
         document.getElementById("socialTitle").textContent = "redes sociales/proyectos";
         document.getElementById("socialText").textContent = "¡revisa mis redes/proyectos con el botón de abajo!";
-        document.getElementById("socialLink").textContent = "ver redes sociales/proyectos →";
         document.getElementById("interestsTitle").textContent = "intereses";
-    	  document.getElementById("Code").textContent = "programar";
-    	  document.getElementById("Valve").textContent = "juegos de Valve";
-    	  document.getElementById("Shitpost").textContent = "shitposting (UN SALUDO A LA GRASA🗣️)";
+        document.getElementById("Code").textContent = "programar";
+        document.getElementById("Valve").textContent = "juegos de Valve";
+        document.getElementById("Shitpost").textContent = "shitposting (UN SALUDO A LA GRASA🗣️)";
         document.getElementById("DiscordTitle").textContent = "estado de Discord";
         document.getElementById("Clothes").textContent = "╰- ropa que vendo en Roblox";
         document.getElementById("VisitsTitle").textContent = "contador de visitas";
         document.getElementById("NP").textContent = "ahora reproduciendo...";
         document.getElementById("PM").textContent = "mensajes";
         document.getElementById("ttalt").textContent = "╰- tiktok (Cuenta alternativa/Backup)";
-        document.getElementById("CoSTrades").textContent = "tradeos y subastas activ@s en creatures of sonaria"
-        document.getElementById("MainTextCoST").textContent = "aquí encontrarás cualquier tradeo en el que esté interesado o subastas que este haciendo en CoS. - para contactar conmigo sobre cualquier cosa relacionada a los tradeos y subastas mencionados aquí comunicate conmigo a través de Discord (pista: haz clic en la imagen de estado de Discord en su respectiva ventana). - todos los tradeos son NYP (Nombra Tu Precio/Name Your Price) a menos de que se especifique lo contrario."
+        document.getElementById("CoSTrades").textContent = "tradeos y subastas activ@s en creatures of sonaria";
+        document.getElementById("MainTextCoST").textContent = "aquí encontrarás cualquier tradeo en el que esté interesado o subastas que este haciendo en CoS. - para contactar conmigo sobre cualquier cosa relacionada a los tradeos y subastas mencionados aquí comunicate conmigo a través de Discord (pista: haz clic en la imagen de estado de Discord en su respectiva ventana). - todos los tradeos son NYP (Nombra Tu Precio/Name Your Price) a menos de que se especifique lo contrario.";
         document.getElementById("More").textContent = "¡...y más! mis mensajes privados (DMs/MDs) están abiertos para todos en todas las plataformas que esten en mis redes sociales que lo permitan (nota: para acceder a mi perfil de Discord haz click en la imagen con mi Estado de Discord en la ventana con dicho nombre). No dudes en preguntarme si me gusta alguna otra cosa que no haya sido mencionada aquí (¡revisar mis redes sociales podría ayudarte a que sepas más de mis intereses!).";
-        document.getElementById("bot1").textContent = "añade recordatorios a tu servidor o cuenta de Discord"
-        document.getElementById("bot2").textContent = "añade acciones de moderación temporales personalizables a tu servidor de Discord"
-        document.getElementById("bot3").textContent = "añade a un bot de IA potenciado por Google Gemini a tu servidor de Discord"
-        document.getElementById("commsTitle").textContent = "info. de comisiones (en inglés)"
-        document.getElementById("ybmp").textContent = "¡usa un reproductor de música poderoso directamente desde tu navegador!"
+        document.getElementById("bot1").textContent = "añade recordatorios a tu servidor o cuenta de Discord";
+        document.getElementById("bot2").textContent = "añade acciones de moderación temporales personalizables a tu servidor de Discord";
+        document.getElementById("bot3").textContent = "añade a un bot de IA potenciado por Google Gemini a tu servidor de Discord";
+        document.getElementById("commsTitle").textContent = "info. de comisiones (en inglés)";
+        document.getElementById("ybmp").textContent = "¡usa un reproductor de música poderoso directamente desde tu navegador!";
         document.querySelector(".lang-toggle").textContent = "change to English";
         currentLang = 'es';
       } else {
@@ -485,31 +930,29 @@
         document.getElementById("aboutText").textContent = "hi, I'm gal. I'm a content creator and coder that (mostly) does private projects that I later share with friends for fun. I'm from Spain. I'm from Spain and I'm a minor. Note exclusively for the english language: English is NOT my first language. I might do typos and other things like that while writing, talking, etc. I apologise.";
         document.getElementById("socialTitle").textContent = "socials/projects";
         document.getElementById("socialText").textContent = "check my socials/projects below!!";
-        document.getElementById("socialLink").textContent = "check socialz/projectz →";
         document.getElementById("interestsTitle").textContent = "interests";
-    	  document.getElementById("Code").textContent = "coding";
-    	  document.getElementById("Valve").textContent = "Valve games";
-    	  document.getElementById("Shitpost").textContent = "shitposting";
-        document.getElementById("DiscordTitle").textContent = "discord status (insert cool easter egg here >:])";
+        document.getElementById("Code").textContent = "coding";
+        document.getElementById("Valve").textContent = "Valve games";
+        document.getElementById("Shitpost").textContent = "shitposting";
+        document.getElementById("DiscordTitle").textContent = "discord status";
         document.getElementById("Clothes").textContent = "╰- selling clothes on Roblox";
         document.getElementById("VisitsTitle").textContent = "visits Counter";
         document.getElementById("NP").textContent = "now playing";
         document.getElementById("PM").textContent = "messages";
         document.getElementById("ttalt").textContent = "╰- tiktok (Alt/Backup account)";
-        document.getElementById("CoSTrades").textContent = "creatures of sonaria ongoing trades and auctions"
-        document.getElementById("MainTextCoST").textContent = "here you'll find any CoS trades and bids I'm interested on or doing. - to offer or trade DM me on Discord (click the Discord Status image on its respective window!) - every trade is NYP (Name Your Price) unless specified otherwise."
+        document.getElementById("CoSTrades").textContent = "creatures of sonaria ongoing trades and auctions";
+        document.getElementById("MainTextCoST").textContent = "here you'll find any CoS trades and bids I'm interested on or doing. - to offer or trade DM me on Discord (click the Discord Status image on its respective window!) - every trade is NYP (Name Your Price) unless specified otherwise.";
         document.getElementById("More").textContent = "...and more! DMs are open in all the platforms on where you can open them to everyone (check socials if you haven't done so yet, and/or press on the Discord Status image inside its window to go to my Discord profile), I won't mind you asking stuff like if I like certain stuff (and checking my socials should help!)";
-        document.getElementById("bot1").textContent = "add reminders to your Discord server/account"
-        document.getElementById("bot2").textContent = "add customizable temporal moderation actions to your Discord server"
-        document.getElementById("bot3").textContent = "add a Google Gemini-powered AI bot to your Discord server"
-        document.getElementById("commsTitle").textContent = "commission info"
-        document.getElementById("ybmp").textContent = "start using a powerful music player right on your browser!"
+        document.getElementById("bot1").textContent = "add reminders to your Discord server/account";
+        document.getElementById("bot2").textContent = "add customizable temporal moderation actions to your Discord server";
+        document.getElementById("bot3").textContent = "add a Google Gemini-powered AI bot to your Discord server";
+        document.getElementById("commsTitle").textContent = "commission info";
+        document.getElementById("ybmp").textContent = "start using a powerful music player right on your browser!";
         document.querySelector(".lang-toggle").textContent = "cambiar a Español";
         currentLang = 'en';
       }
     }
-  </script>
-  <script>
+
     const playlist = [
       { title: "CircusP & FLAVOR FOLEY (ft. KAITO) - ELECTRIC WEEKEND ZONE", url: "https://files.catbox.moe/9vbbyf.mp3" },
       { title: "Phill. C - ULTRASONIC FAITH", url: "https://files.catbox.moe/7jkwr3.mp3" },
@@ -598,9 +1041,7 @@
         nextTrack();
       });
     });
-  </script>
 
-  <script>
     const BLOG_JSON_URL = "https://raw.githubusercontent.com/galzstuff/abtgal/main/blog.json";
   
     async function cargarBlog() {
@@ -612,12 +1053,11 @@
   
         posts.forEach(post => {
           const div = document.createElement("div");
-          div.style.marginBottom = "20px";
+          div.className = "blog-entry";
           div.innerHTML = `
             <strong>${post.title}</strong><br>
             <small>${post.date}</small>
-            <p>${post.content}</p>
-            <hr>
+            <p style="margin-top: 0.5rem;">${post.content}</p>
           `;
           contenedor.appendChild(div);
         });
