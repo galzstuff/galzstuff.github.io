@@ -1,32 +1,7 @@
 [
   {
-    "date": "06/12/2025",
-    "title": "redesign! / ¡rediseño!",
-    "content": "I've redesigned the page, adding a LOT of QoL features and adding more anims & stuff around. it's also been 4 months now since the 1st blog post on this web. / he rediseñado la página web, mejorando un MONTÓN la interfaz y añadiendo animaciones y demás por ahi. también, han pasado 4 meses desde la primera publicación en el blog de la página."
+    "date": "an eternity ago.",
+    "title": "hey! what are you doing nosing up here! scram!",
+    "content": ">:("
   },
-  {
-    "date": "18/10/2025",
-    "title": "added commission info! / ¡añadida la información de comisiones!",
-    "content": "new window w/comm. info / nueva ventana con info. de comisiones (por ahora solo en ingles)"
-  },
-  {
-    "date": "1/09/2025",
-    "title": "mini change yay yippee / mini cambio yay yippee",
-    "content": "new window with CoS trades and added artist names on music player - nueva ventana con trades de CoS y he añadido los nombres de los artistas en el reproductor de música :p"
-  },
-  {
-    "date": "14/08/2025",
-    "title": "added public messages / he añadido los mensajes públicos",
-    "content": "hey there, there's a new window on which you can write me a lil message and i'll surely read it. that's all :p / hola, hay una nueva ventana en la que puedes dejarme algún mensajito y lo mas posible es que lo lea. eso es todo, chaito :p"
-  },
-  {
-    "date": "07/08/2025",
-    "title": "did changes :0 / he hecho cambios :0",
-    "content": "soo i added a favicon and more music thats all. i'd also like to note that date will be formatted on this way in all of my blog entries: DD/MM/YYYY / emm he añadido un icono a la pagina y mas musica... creo que eso es todo. tambien me gustaría decir que la fecha en todas las entradas del blog tendrán este formato: DD/MM/YYYY (Día/Mes/Año)"
-  },
-  {
-    "date": "06/08/2025",
-    "title": "Welcome to my blog! / Bienvenido a mi blog!",
-    "content": "This is the first entry of my new blog system. / Esta es la primera entrada de mi sistema de blog. - Note to self: add <code>},</code> at the end of new blog entries."
-  }
 ]
